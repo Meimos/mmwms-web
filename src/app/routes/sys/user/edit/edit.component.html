@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <div class="modal-title" *ngIf="record.id > 0; else elseTemplete">修改用户信息</div>
+  <ng-template #elseTemplete>新增用户信息</ng-template>
+</div>
+<nz-spin *ngIf="!formData" class="modal-spin"></nz-spin>
+<sf *ngIf="formData" #sf mode="edit" [schema]="schema" compact="false" [ui]="ui" [formData]="formData" button="none">
+  <div class="modal-footer">
+    <button nz-button type="button" (click)="close()">关闭</button>
+    <button nz-button type="submit" nzType="primary" (click)="saveOrUpdate(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">
+      保存
+    </button>
+  </div>
+</sf>
