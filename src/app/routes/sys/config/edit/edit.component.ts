@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SFSchema, SFUISchema } from '@delon/form';
+import {SFComponent, SFRadioWidgetSchema, SFSchema, SFUISchema} from '@delon/form';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import {dictMap, DictType, IConfig, Config} from '@shared';
 
 @Component({
   selector: 'app-sys-config-edit',
@@ -11,28 +12,46 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 export class SysConfigEditComponent implements OnInit {
   record: any = {};
   i: any;
+
+  @ViewChild('sf', { static: false }) private sf: SFComponent;
   schema: SFSchema = {
     properties: {
-      no: { type: 'string', title: '编号' },
-      owner: { type: 'string', title: '姓名', maxLength: 15 },
-      callNo: { type: 'number', title: '调用次数' },
-      href: { type: 'string', title: '链接', format: 'uri' },
-      description: { type: 'string', title: '描述', maxLength: 140 },
+      configId: { type: 'number', title: '参数主键' },
+      configName: { type: 'string', title: '参数名称', maxLength: 15 },
+      configKey: { type: 'string', title: '参数键名' },
+      configValue: { type: 'string', title: '参数键值' },
+     /* configType: { type: 'string', title: '系统内置', maxLength: 140 },*/
+      configType: {
+        type: 'string',
+        title: '系统内置',
+        enum: dictMap.get(DictType.ISYES),
+        ui: {
+          widget: 'radio',
+        } as SFRadioWidgetSchema,
+        default: dictMap.get(DictType.ISYES)[0].value,
+      },
+      remark: { type: 'string', title: '备注' },
+  /*    createTime: { type: 'da', title: '创建时间' },
+      createBy: { type: 'string', title: '创建人' },
+      updateTime: { type: 'date', title: '修改时间' },
+      updateBy: { type: 'string', title: '修改人' },*/
     },
-    required: ['owner', 'callNo', 'href', 'description'],
+    // required: ['configName', 'configKey', 'configValue', 'configType', 'remark', 'createTime', 'createBy', 'updateTime', 'updateBy'],
+    required: ['configName', 'configKey', 'configValue', 'configType', 'remark'],
+
   };
   ui: SFUISchema = {
     '*': {
       spanLabelFixed: 100,
       grid: { span: 12 },
     },
-    $no: {
-      widget: 'text',
+    $configId: {
+      widget: 'number',
     },
-    $href: {
+    $configName: {
       widget: 'string',
     },
-    $description: {
+    $configKey: {
       widget: 'textarea',
       grid: { span: 24 },
     },
@@ -41,16 +60,42 @@ export class SysConfigEditComponent implements OnInit {
   constructor(private modal: NzModalRef, private msgSrv: NzMessageService, public http: _HttpClient) {}
 
   ngOnInit(): void {
-    if (this.record.id > 0) {
-      this.http.get(`/user/${this.record.id}`).subscribe((res) => (this.i = res));
+    console.log(this.record);
+   /* if (this.record.configId > 0) {
+      this.http.get(`system/config/${this.record.configId}`).subscribe((res) => (this.i = res));
+    }*/
+    if (this.record.configId > 0) {
+      this.http.get('system/config/' + this.record.configId).subscribe((res) => {
+        this.i = res.data;
+        // this.i.roleIds = res.roleIds;
+        this.msgSrv.success('初始化成功');
+      });
+    } else {
+      // this.msgSrv.success('初始化失败');
+      this.i = new Config(null);
     }
   }
 
-  save(value: any) {
-    this.http.post(`/user/${this.record.id}`, value).subscribe((res) => {
+/*  save(value: any) {
+    this.http.post(`system//config/${this.record.configId}`, value).subscribe((res) => {
       this.msgSrv.success('保存成功');
       this.modal.close(true);
     });
+  }*/
+  saveOrUpdate(value: any) {
+    if (this.record.configId > 0) {
+      this.http.put('system/config', value).subscribe((res) => {
+        if (res.code === 200) {
+          this.modal.close(true);
+        }
+      });
+    } else {
+      this.http.post('system/config', value).subscribe((res) => {
+        if (res.code === 200) {
+          this.modal.close(true);
+        }
+      });
+    }
   }
 
   close() {
