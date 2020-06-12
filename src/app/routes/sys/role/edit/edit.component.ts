@@ -40,7 +40,7 @@ export class SysRoleEditComponent implements OnInit {
         ui: {
           widget: 'tree-select',
           checkable: true,
-          checkStrictly: false,
+          checkStrictly: true,
           asyncData: () => this.http.get('system/menu/tree'),
         } as SFTreeSelectWidgetSchema,
       },

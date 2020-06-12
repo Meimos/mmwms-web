@@ -10,7 +10,42 @@ import { AlainConfig, ALAIN_CONFIG } from '@delon/util';
 import { DelonACLModule } from '@delon/acl';
 
 const alainConfig: AlainConfig = {
-  st: { modal: { size: 'lg' } },
+  st: {
+    modal: { size: 'lg' },
+    size: 'small',
+    bordered: false,
+    pi: 1,
+    ps: 10,
+    page: {
+      total: '', // 分页显示多少条数据，字符串型
+      show: true, // 显示分页
+      front: false, // 关闭前端分页，true是前端分页，false后端控制分页
+      placement: 'right',
+      showSize: true,
+      pageSizes: [10, 20, 30, 40, 90],
+    },
+    req: {
+      type: 'page',
+      method: 'GET',
+      reName: {
+        pi: 'pageNum',
+        ps: 'pageSize',
+      },
+      process: (opt) => {
+        return opt;
+      },
+    },
+    sortReName: {
+      ascend: 'asc',
+      descend: 'desc',
+    },
+    res: {
+      reName: {
+        list: 'rows',
+        total: 'total',
+      },
+    },
+  },
   pageHeader: { homeI18n: 'home' },
   lodop: {
     license: `A59B099A586B3851E0F0D7FDBF37B603`,

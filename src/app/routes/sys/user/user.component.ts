@@ -59,7 +59,6 @@ export class SysUserComponent implements OnInit {
   add() {
     this.modal.static(SysUserEditComponent, { record: { userId: 0 } }).subscribe(() => {
       this.st.load();
-      // this.msgSrv.info('正在加载列表');
     });
   }
 
@@ -73,6 +72,21 @@ export class SysUserComponent implements OnInit {
         this.selectedRows = ret.checkbox;
         console.log(ret.checkbox);
         break;
+    }
+  }
+
+
+  /**
+   * 删除
+   */
+  del() {
+    if (this.selectedRows.length > 0) {
+      let userIds = [];
+      userIds = this.selectedRows.map(item => {
+        return item.userId;
+      });
+      console.log(userIds);
+      this.http.delete('system/user/', userIds);
     }
   }
 
