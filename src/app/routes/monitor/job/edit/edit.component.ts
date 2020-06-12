@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SFSchema, SFUISchema } from '@delon/form';
+import {SFComponent, SFRadioWidgetSchema, SFSchema, SFUISchema, SFSelectWidgetSchema, SFTextareaWidgetSchema, SFTagWidgetSchema} from '@delon/form';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import {dictMap, DictType, IJob, Job } from '@shared';
 
 @Component({
   selector: 'app-monitor-job-edit',
@@ -11,50 +12,106 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 export class MonitorJobEditComponent implements OnInit {
   record: any = {};
   i: any;
+  @ViewChild('sf', { static: false }) private sf: SFComponent;
   schema: SFSchema = {
     properties: {
-      no: { type: 'string', title: '编号' },
-      owner: { type: 'string', title: '姓名', maxLength: 15 },
-      callNo: { type: 'number', title: '调用次数' },
-      href: { type: 'string', title: '链接', format: 'uri' },
-      description: { type: 'string', title: '描述', maxLength: 140 },
+      // jobId: { type: 'number', title: '任务序号', },
+      jobName: { type: 'string', title: '任务名称', },
+      jobGroup: {
+        type: 'string',
+        title: '任务组名',
+        enum: dictMap.get(DictType.JOB_GROUP),
+        ui: {
+          widget: 'select',
+        } as SFSelectWidgetSchema,
+        default: dictMap.get(DictType.JOB_GROUP)[0].value,
+      },
+      invokeTarget: { type: 'string', title: '调用目标字符串', },
+      cronExpression: { type: 'string', title: '执行表达式', },
+      /*0=允许,1=禁止*/
+      concurrent: {
+        type: 'string',
+        title: '并发执行',
+        enum: dictMap.get(DictType.JOB_IS_CONCURRENT_EXE),
+        ui: {
+          widget: 'tag',
+        } as SFTagWidgetSchema,
+        default: dictMap.get(DictType.JOB_IS_CONCURRENT_EXE)[0].value,
+      },
+      /*0=默认,1=立即触发执行,2=触发一次执行,3=不触发立即执行*/
+      misfirePolicy: {
+        type: 'string',
+        title: 'cron计划策略',
+        enum: dictMap.get(DictType.JOB_MISFIRE_IGNORE_MISFIRES),
+        ui: {
+          widget: 'radio',
+        } as SFRadioWidgetSchema,
+        default: dictMap.get(DictType.JOB_MISFIRE_IGNORE_MISFIRES)[0].value,
+      },
+      status: {
+        type: 'string',
+        title: '任务状态',
+        enum: dictMap.get(DictType.JOB_STATUS),
+        ui: {
+          widget: 'radio',
+        } as SFRadioWidgetSchema,
+        default: dictMap.get(DictType.JOB_STATUS)[0].value,
+      },
+
+      // noticeContent: { type: 'string', title: '内容' },
+
     },
-    required: ['owner', 'callNo', 'href', 'description'],
+    required: ['jobId', 'jobName', 'jobGroup', 'invokeTarget', 'cronExpression', 'concurrent', 'misfirePolicy', 'status'],
+
   };
   ui: SFUISchema = {
     '*': {
-      spanLabelFixed: 100,
+      spanLabelFixed: 120,
+
       grid: { span: 12 },
     },
-    $no: {
-      widget: 'text'
+    $jobId: {
+      widget: 'number',
     },
-    $href: {
+    $jobName: {
       widget: 'string',
     },
-    $description: {
-      widget: 'textarea',
-      grid: { span: 24 },
+    $cronExpression: {
+      widget: 'string',
+      grid: { span: 18 },
     },
   };
 
-  constructor(
-    private modal: NzModalRef,
-    private msgSrv: NzMessageService,
-    public http: _HttpClient,
-  ) {}
+  constructor(private modal: NzModalRef, private msgSrv: NzMessageService, public http: _HttpClient) {}
 
   ngOnInit(): void {
-    if (this.record.id > 0) {
-    this.http.get(`/user/${this.record.id}`).subscribe(res => (this.i = res));
+    console.log(this.record);
+    if (this.record.jobId > 0) {
+      this.http.get('monitor/job/' + this.record.jobId).subscribe((res) => {
+        this.i = res.data;
+        // this.i.roleIds = res.roleIds;
+        this.msgSrv.success('初始化成功');
+      });
+    } else {
+      // this.msgSrv.success('初始化失败');
+      this.i = new Job(null);
     }
   }
 
-  save(value: any) {
-    this.http.post(`/user/${this.record.id}`, value).subscribe(res => {
-      this.msgSrv.success('保存成功');
-      this.modal.close(true);
-    });
+  saveOrUpdate(value: any) {
+    if (this.record.jobId > 0) {
+      this.http.put('monitor/job', value).subscribe((res) => {
+        if (res.code === 200) {
+          this.modal.close(true);
+        }
+      });
+    } else {
+      this.http.post('monitor/job', value).subscribe((res) => {
+        if (res.code === 200) {
+          this.modal.close(true);
+        }
+      });
+    }
   }
 
   close() {
