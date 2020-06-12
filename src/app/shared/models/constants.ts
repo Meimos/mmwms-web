@@ -109,13 +109,9 @@ export interface DictTypeData {
 export enum DictType {
   SEX = 'SEX',
   USER_STATUS = 'USER_STATUS',
-  ISYES = 'IS_YES',
-  NOTICETYPE = 'NOTICETYPE',
-  NOTICESTATUS = 'NOTICESTATUS',
-  JOB_GROUP = 'JOB_GROUP',
-  JOB_STATUS = 'JOB_STATUS',
-  JOB_IS_CONCURRENT_EXE = 'JOB_IS_CONCURRENT_EXE' ,
-  JOB_MISFIRE_IGNORE_MISFIRES = 'JOB_MISFIRE_IGNORE_MISFIRES' ,
+  MENU_TYPE_DIR = 'M',
+  MENU_TYPE_MENU = 'C',
+  MENU_TYPE_BTN = 'F',
 }
 
 export const dictMap = new Map<DictType, DictTypeData[]>([
@@ -146,109 +142,6 @@ export const dictMap = new Map<DictType, DictTypeData[]>([
       {
         label: '失效',
         value: '1',
-      },
-    ],
-  ],
-  [
-    DictType.ISYES,
-    [
-      {
-        label: '是',
-        value: 'Y',
-      },
-      {
-        label: '否',
-        value: 'N',
-      },
-    ],
-  ],
-  [
-    DictType.NOTICETYPE,
-    [
-      {
-        label: '通告',
-        value: '1',
-      },
-      {
-        label: '公告',
-        value: '2',
-      },
-    ],
-  ],
-  [
-    DictType.NOTICESTATUS,
-    [
-      {
-        label: '正常',
-        value: '0',
-      },
-      {
-        label: '关闭',
-        value: '1',
-      },
-    ],
-  ],
-  [
-    DictType.JOB_GROUP,
-    [
-      {
-        label: '默认',
-        value: '0',
-      },
-      {
-        label: '系统',
-        value: '1',
-      },
-    ],
-  ],
-  [
-    DictType.JOB_STATUS,
-    [
-      {
-        label: '正常',
-        value: '0',
-      },
-      {
-        label: '暂停',
-        value: '1',
-      },
-    ],
-  ],
-/*  /!*0=允许,1=禁止*!/
-  concurrent: { type: 'string', title: '并发执行', },
-/!*0=默认,1=立即触发执行,2=触发一次执行,3=不触发立即执行*!/
-misfirePolicy: { type: 'string', title: 'cron计划策略', },*/
-  [
-    DictType.JOB_IS_CONCURRENT_EXE,
-    [
-      {
-        label: '允许',
-        value: '0',
-      },
-      {
-        label: '禁止',
-        value: '1',
-      },
-    ],
-  ],
-  [
-    DictType.JOB_MISFIRE_IGNORE_MISFIRES,
-    [
-      {
-        label: '默认',
-        value: '0',
-      },
-      {
-        label: '立即触发执行',
-        value: '1',
-      },
-      {
-        label: '触发一次执行',
-        value: '2',
-      },
-      {
-        label: '不触发立即执行',
-        value: '3',
       },
     ],
   ],

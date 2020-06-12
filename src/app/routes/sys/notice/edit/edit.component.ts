@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {SFComponent, SFRadioWidgetSchema, SFSchema, SFUISchema, SFSelectWidgetSchema, SFTextareaWidgetSchema} from '@delon/form';
+import { SFSchema, SFUISchema } from '@delon/form';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
-import {dictMap, DictType, INotice, Notice} from '@shared';
 
 @Component({
   selector: 'app-sys-notice-edit',
@@ -12,54 +11,28 @@ import {dictMap, DictType, INotice, Notice} from '@shared';
 export class SysNoticeEditComponent implements OnInit {
   record: any = {};
   i: any;
-  @ViewChild('sf', { static: false }) private sf: SFComponent;
   schema: SFSchema = {
     properties: {
-      // noticeId: { type: 'number', title: '公告id', },
-      noticeTitle: { type: 'string', title: '公告标题', },
-      noticeType: {
-        type: 'string',
-        title: '公告类型',
-        enum: dictMap.get(DictType.NOTICETYPE),
-        ui: {
-          widget: 'select',
-        } as SFSelectWidgetSchema,
-        default: dictMap.get(DictType.NOTICETYPE)[0].value,
-      },
-      status: {
-        type: 'string',
-        title: '状态',
-        enum: dictMap.get(DictType.NOTICESTATUS),
-        ui: {
-          widget: 'radio',
-        } as SFRadioWidgetSchema,
-        default: dictMap.get(DictType.NOTICESTATUS)[0].value,
-      },
-      noticeContent: {
-        type: 'string',
-        title: '内容',
-        ui: {
-          widget: 'textarea',
-        } as SFTextareaWidgetSchema,
-      },
-      // noticeContent: { type: 'string', title: '内容' },
-
+      no: { type: 'string', title: '编号' },
+      owner: { type: 'string', title: '姓名', maxLength: 15 },
+      callNo: { type: 'number', title: '调用次数' },
+      href: { type: 'string', title: '链接', format: 'uri' },
+      description: { type: 'string', title: '描述', maxLength: 140 },
     },
-    required: ['noticeId', 'noticeTitle', 'noticeType', 'status', 'noticeContent'],
-
+    required: ['owner', 'callNo', 'href', 'description'],
   };
   ui: SFUISchema = {
     '*': {
       spanLabelFixed: 100,
       grid: { span: 12 },
     },
-    $noticeId: {
-      widget: 'number',
+    $no: {
+      widget: 'text',
     },
-    $noticeTitle: {
+    $href: {
       widget: 'string',
     },
-    $noticeContent: {
+    $description: {
       widget: 'textarea',
       grid: { span: 24 },
     },
@@ -68,33 +41,16 @@ export class SysNoticeEditComponent implements OnInit {
   constructor(private modal: NzModalRef, private msgSrv: NzMessageService, public http: _HttpClient) {}
 
   ngOnInit(): void {
-    console.log(this.record);
-    if (this.record.noticeId > 0) {
-      this.http.get('system/notice/' + this.record.noticeId).subscribe((res) => {
-        this.i = res.data;
-        // this.i.roleIds = res.roleIds;
-        this.msgSrv.success('初始化成功');
-      });
-    } else {
-      // this.msgSrv.success('初始化失败');
-      this.i = new Notice(null);
+    if (this.record.id > 0) {
+      this.http.get(`/user/${this.record.id}`).subscribe((res) => (this.i = res));
     }
   }
 
-  saveOrUpdate(value: any) {
-    if (this.record.noticeId > 0) {
-      this.http.put('system/notice', value).subscribe((res) => {
-        if (res.code === 200) {
-          this.modal.close(true);
-        }
-      });
-    } else {
-      this.http.post('system/notice', value).subscribe((res) => {
-        if (res.code === 200) {
-          this.modal.close(true);
-        }
-      });
-    }
+  save(value: any) {
+    this.http.post(`/user/${this.record.id}`, value).subscribe((res) => {
+      this.msgSrv.success('保存成功');
+      this.modal.close(true);
+    });
   }
 
   close() {

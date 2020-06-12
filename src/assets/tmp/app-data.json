@@ -21,14 +21,14 @@
           "icon": "anticon-dashboard",
           "children": [
             {
-              "text": "用户管理",
-              "link": "/sys/user",
-              "i18n": "sys.manage.user"
+              "text": "仪表盘V1",
+              "link": "/dashboard/v1",
+              "i18n": "menu.dashboard.v1"
             },
             {
-              "text": "角色管理",
-              "link": "/sys/role",
-              "i18n": "sys.manage.role"
+              "text": "分析页",
+              "link": "/dashboard/analysis",
+              "i18n": "menu.dashboard.analysis"
             },
             {
               "text": "监控页",

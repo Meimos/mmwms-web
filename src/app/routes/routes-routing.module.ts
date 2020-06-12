@@ -26,9 +26,9 @@ const routes: Routes = [
     canActivate: [SimpleGuard],
     canActivateChild: [SimpleGuard],
     children: [
+      { path: '', redirectTo: 'dashboard/v1', pathMatch: 'full' },
       { path: 'sys', loadChildren: () => import('./sys/sys.module').then((m) => m.SysModule) },
       { path: 'monitor', loadChildren: () => import('./monitor/monitor.module').then((m) => m.MonitorModule) },
-      { path: '', redirectTo: 'dashboard/v1', pathMatch: 'full' },
       { path: 'dashboard', redirectTo: 'dashboard/v1', pathMatch: 'full' },
       { path: 'dashboard/v1', component: DashboardV1Component },
       { path: 'dashboard/analysis', component: DashboardAnalysisComponent },

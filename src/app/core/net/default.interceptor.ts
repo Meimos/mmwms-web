@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
-import { TranslateService } from '@ngx-translate/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
@@ -40,7 +39,7 @@ const CODEMESSAGE = {
  */
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
-  constructor(private injector: Injector, private translate: TranslateService) {}
+  constructor(private injector: Injector) {}
 
   private get notification(): NzNotificationService {
     return this.injector.get(NzNotificationService);
@@ -69,9 +68,6 @@ export class DefaultInterceptor implements HttpInterceptor {
     switch (ev.status) {
       case 200:
         // 业务层级错误处理，以下是假定restful有一套统一输出格式（指不管成功与否都有相应的数据格式）情况下进行处理
-        // 例如响应内容：
-        //  错误内容：{ status: 500, msg: '非法参数' }
-        //  正确内容：{ status: 200, response: {  } }
         if (ev instanceof HttpResponse) {
           const body: any = ev.body;
           if (body && body.code !== 200) {
