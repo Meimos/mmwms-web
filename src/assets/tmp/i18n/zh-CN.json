@@ -148,5 +148,18 @@
   "validation.title.required": "请输入标题",
   "validation.date.required": "请选择起止日期",
   "validation.goal.required": "请输入目标描述",
-  "validation.standard.required": "请输入衡量标准"
+  "validation.standard.required": "请输入衡量标准",
+  "sys.manage.user":"用户管理",
+  "sys.manage.role":"角色管理",
+  "sys.manage.menu":"菜单管理",
+  "sys.manage.dict":"字典管理",
+  "sys.manage.config":"参数设置",
+  "sys.manage.log":"日志管理",
+  "sys.manage.log.oper":"操作日志",
+  "sys.manage.log.login":"登录日志",
+  "sys.manage.notice":"通知公告",
+  "monitor.manage.online":"在线用户",
+  "monitor.manage.job":"定时任务",
+  "monitor.manage.druid":"数据监控",
+  "monitor.manage.server":"服务监控"
 }

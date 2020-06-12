@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NzModalRef } from 'ng-zorro-antd/modal';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { _HttpClient } from '@delon/theme';
 import { SFSchema, SFUISchema } from '@delon/form';
+import { _HttpClient } from '@delon/theme';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-monitor-job-edit',
@@ -45,8 +45,9 @@ export class MonitorJobEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.record.id > 0)
+    if (this.record.id > 0) {
     this.http.get(`/user/${this.record.id}`).subscribe(res => (this.i = res));
+    }
   }
 
   save(value: any) {
