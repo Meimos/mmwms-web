@@ -1,19 +1,19 @@
 {
-  "name": "ng-alain",
-  "version": "9.3.0",
-  "description": "ng-zorro-antd admin panel front-end framework",
-  "author": "cipchk <cipchk@qq.com>",
+  "name": "mmwms-web",
+  "version": "1.0",
+  "description": "mmwms admin panel front-end framework",
+  "author": "meimosor <meimosor@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ng-alain/ng-alain.git"
+    "url": "git+https://github.com/Meimos/mmwms-web.git"
   },
   "bugs": {
-    "url": "https://github.com/ng-alain/ng-alain/issues"
+    "url": "https://github.com/Meimos/mmwms-web/issues"
   },
-  "homepage": "https://ng-alain.com",
+  "homepage": "https://meimos.com",
   "license": "MIT",
   "keywords": [
-    "delon",
+    "wms",
     "antd",
     "ng-zorro-antd",
     "angular",
@@ -55,15 +55,15 @@
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "ajv": "^6.12.2",
-    "@delon/abc": "^9.3.0",
-    "@delon/acl": "^9.3.0",
-    "@delon/auth": "^9.3.0",
-    "@delon/cache": "^9.3.0",
-    "@delon/chart": "^9.3.0",
-    "@delon/form": "^9.3.0",
-    "@delon/mock": "^9.3.0",
-    "@delon/theme": "^9.3.0",
-    "@delon/util": "^9.3.0",
+    "@delon/abc": "^9.3.2",
+    "@delon/acl": "^9.3.2",
+    "@delon/auth": "^9.3.2",
+    "@delon/cache": "^9.3.2",
+    "@delon/chart": "^9.3.2",
+    "@delon/form": "^9.3.2",
+    "@delon/mock": "^9.3.2",
+    "@delon/theme": "^9.3.2",
+    "@delon/util": "^9.3.2",
     "file-saver": "^2.0.2",
     "ng-zorro-antd": "^9.1.2",
     "ngx-tinymce": "^9.0.0",
@@ -113,8 +113,8 @@
     "webpack-bundle-analyzer": "^3.6.1",
     "antd-theme-generator": "1.2.2",
     "xlsx": "^0.16.1",
-    "@delon/testing": "^9.3.0",
-    "ng-alain": "^9.3.0",
+    "@delon/testing": "^9.3.2",
+    "ng-alain": "^9.3.2",
     "ng-alain-codelyzer": "^0.0.1"
   },
   "husky": {
