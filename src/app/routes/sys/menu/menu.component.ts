@@ -1,114 +1,102 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { STColumn, STColumnBadge, STColumnTag, STComponent } from '@delon/abc/st';
-import { SFSchema } from '@delon/form';
+import { Component, OnInit } from '@angular/core';
 import { ModalHelper, _HttpClient } from '@delon/theme';
+import { DictType, IMenu, Menu } from '@shared';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzFormatEmitEvent } from 'ng-zorro-antd/tree';
-
-const BADGE: STColumnBadge = {
-  1: { text: '成功', color: 'success' },
-  2: { text: '错误', color: 'error' },
-  3: { text: '进行中', color: 'processing' },
-  4: { text: '默认', color: 'default' },
-  5: { text: '警告', color: 'warning' },
-};
-const TAG: STColumnTag = {
-  1: { text: '成功', color: 'green' },
-  2: { text: '错误', color: 'red' },
-  3: { text: '进行中', color: 'blue' },
-  4: { text: '默认', color: '' },
-  5: { text: '警告', color: 'orange' },
-};
-const r = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);
 
 @Component({
   selector: 'app-sys-menu',
   templateUrl: './menu.component.html',
 })
 export class SysMenuComponent implements OnInit {
-  constructor(private http: _HttpClient, private modal: ModalHelper) {}
+  constructor(private http: _HttpClient, public msgSrv: NzMessageService, private modal: ModalHelper) {}
   searchValue = '';
 
-  nodes = [
-    {
-      title: '0-0',
-      key: '0-0',
-      children: [
-        {
-          title: '0-0-0',
-          key: '0-0-0',
-          children: [
-            { title: '0-0-0-0', key: '0-0-0-0', isLeaf: true },
-            { title: '0-0-0-1', key: '0-0-0-1', isLeaf: true },
-            { title: '0-0-0-2', key: '0-0-0-2', isLeaf: true },
-          ],
-        },
-        {
-          title: '0-0-1',
-          key: '0-0-1',
-          children: [
-            { title: '0-0-1-0', key: '0-0-1-0', isLeaf: true },
-            { title: '0-0-1-1', key: '0-0-1-1', isLeaf: true },
-            { title: '0-0-1-2', key: '0-0-1-2', isLeaf: true },
-          ],
-        },
-        {
-          title: '0-0-2',
-          key: '0-0-2',
-          isLeaf: true,
-        },
-      ],
-    },
-    {
-      title: '0-1',
-      key: '0-1',
-      children: [
-        { title: '0-1-0-0', key: '0-1-0-0', isLeaf: true },
-        { title: '0-1-0-1', key: '0-1-0-1', isLeaf: true },
-        { title: '0-1-0-2', key: '0-1-0-2', isLeaf: true },
-      ],
-    },
-    {
-      title: '0-2',
-      key: '0-2',
-      isLeaf: true,
-    },
-  ];
-  users: any[] = [];
-  columns: STColumn[] = [
-    { title: '行号', type: 'no' },
-    { title: '姓名', index: 'name' },
-    { title: '年龄', index: 'age', type: 'number' },
-    { title: 'tag', index: 'tag', type: 'tag', tag: TAG },
-    { title: 'badge', index: 'badge', type: 'badge', badge: BADGE },
-    { title: 'Enum', index: 'enum', type: 'enum', enum: { 1: '壹', 2: '贰', 3: '叁' } },
-    { title: 'yn', index: 'yn', type: 'yn' },
-  ];
+  treeNodes = [];
+  treeSelectNodes = [];
+  menu: IMenu = {};
+  pidDisabled = false;
+  selectedNode?: number;
 
-  nzEvent(event: NzFormatEmitEvent): void {
-    console.log(event);
+  ngOnInit() {
+    this.initTreeNodes();
   }
 
-  reload() {
-    this.users = Array(10)
-      .fill({})
-      .map((_item: any, idx: number) => {
-        return {
-          id: idx + 1,
-          name: `name ${idx + 1}`,
-          age: r(10, 50),
-          tag: r(1, 5),
-          badge: r(1, 5),
-          enum: r(1, 3),
-          yn: [true, false][r(1, 5) % 2],
-        };
-      });
+  /**
+   * 初始化tree&treeselect
+   */
+  initTreeNodes() {
+    this.http.get('system/menu/treeselect').subscribe((res) => {
+      console.log(res);
+
+      this.treeSelectNodes = res.data;
+      this.treeNodes = res.data;
+    });
   }
 
-  ngOnInit() {}
-
+  /**
+   * 添加菜单
+   */
   add() {
-    // this.modal
-    //   .createStatic(FormEditComponent, { i: { id: 0 } })
-    //   .subscribe(() => this.st.reload());
+    const menu = this.menu;
+    if (menu.menuType === 'F') {
+      this.msgSrv.error('按钮下面不能添加菜单，请重新选择！');
+      return;
+    }
+
+    this.menu = new Menu(null, DictType.MENU_TYPE_MENU, menu.menuId, true);
+    this.pidDisabled = true;
+  }
+
+  /**
+   * 删除
+   */
+  confirm(): void {
+    this.http.delete('system/menu/' + this.selectedNode).subscribe((res) => {
+      this.msgSrv.success('此操作将会删除信息，确定要操作吗？');
+      this.initTreeNodes();
+    });
+  }
+  /**
+   * Tree监听
+   */
+  nzEvent(event: NzFormatEmitEvent): void {
+    switch (event.eventName) {
+      case 'click':
+        this.pidDisabled = false;
+        const snode = event.keys[0];
+        this.selectedNode = Number(snode);
+        if (snode != null && snode !== undefined) {
+          this.http.get('system/menu/' + snode).subscribe((res) => {
+            this.menu = res.data;
+          });
+        }
+        break;
+    }
+  }
+
+  /**
+   * 更新菜单
+   */
+  update() {
+    const mnu = this.menu;
+    if (mnu.menuId > 0) {
+      // 修改
+      if (mnu.menuId === mnu.pid) {
+        this.msgSrv.error('父节点不能选择自己，请重新选择！');
+        return;
+      }
+      this.http.put('system/menu', this.menu).subscribe((res) => {
+        this.msgSrv.success(res.msg);
+      });
+    } else {
+      // 新增
+      console.log(mnu);
+      this.http.post('system/menu', this.menu).subscribe((res) => {
+        this.msgSrv.success(res.msg);
+      });
+    }
+
+    this.initTreeNodes();
   }
 }

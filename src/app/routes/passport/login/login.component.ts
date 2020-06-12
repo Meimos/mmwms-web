@@ -3,14 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StartupService } from '@core';
 import { ReuseTabService } from '@delon/abc/reuse-tab';
-import { ACLService } from '@delon/acl';
 import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '@delon/auth';
 import { SettingsService, _HttpClient } from '@delon/theme';
-import { ALAIN_I18N_TOKEN, MenuService, TitleService } from '@delon/theme';
 import { environment } from '@env/environment';
-import { UserAccount } from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
+
 @Component({
   selector: 'passport-login',
   templateUrl: './login.component.html',
@@ -31,14 +29,10 @@ export class UserLoginComponent implements OnDestroy {
     private startupSrv: StartupService,
     public http: _HttpClient,
     public msg: NzMessageService,
-    private menuService: MenuService,
-    private settingService: SettingsService,
-    private aclService: ACLService,
-    private titleService: TitleService,
   ) {
     this.form = fb.group({
-      userName: [null, [Validators.required, Validators.minLength(4)]],
-      password: [null, Validators.required],
+      userName: [null, [Validators.required, Validators.pattern(/^(admin|user)$/)]],
+      password: [null, [Validators.required, Validators.pattern(/^(ng\-alain\.com)$/)]],
       mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)]],
       captcha: [null, [Validators.required]],
       remember: [true],
@@ -115,57 +109,29 @@ export class UserLoginComponent implements OnDestroy {
     // 默认配置中对所有HTTP请求都会强制 [校验](https://ng-alain.com/auth/getting-started) 用户 Token
     // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
     this.http
-      .post('/login?_allow_anonymous=true', {
+      .post('/login/account?_allow_anonymous=true', {
         type: this.type,
-        username: this.userName.value,
+        userName: this.userName.value,
         password: this.password.value,
       })
-      .subscribe(
-        (res: any) => {
-          if (res.code === 500) {
-            this.error = res.msg || '登录异常，稍后再试';
-            return;
+      .subscribe((res: any) => {
+        if (res.msg !== 'ok') {
+          this.error = res.msg;
+          return;
+        }
+        // 清空路由复用信息
+        this.reuseTabService.clear();
+        // 设置用户Token信息
+        this.tokenService.set(res.user);
+        // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
+        this.startupSrv.load().then(() => {
+          let url = this.tokenService.referrer.url || '/';
+          if (url.includes('/passport')) {
+            url = '/';
           }
-          // 清空路由复用信息
-          this.reuseTabService.clear();
-          // 设置用户Token信息
-          this.tokenService.set({ token: res.token });
-          // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
-          this.startupSrv.load().then(() => {
-            let url = this.tokenService.referrer.url || '/';
-            if (url.includes('/passport')) {
-              url = '/';
-            }
-            this.http.get('getInfo').subscribe(
-              (res: UserAccount) => {
-                if (res.code === 200) {
-                  // 设置用户信息
-                  const user = {
-                    name: res.user.userName,
-                    avatar: res.user.avatar,
-                    email: res.user.email,
-                  };
-                  // 用户信息：包括姓名、头像、邮箱地址
-                  this.settingService.setUser(user);
-                  // ACL：设置权限为全量
-                  this.aclService.setFull(true);
-                  // 初始化菜单
-                  this.menuService.add(res.menu);
-                  // 设置页面标题的后缀
-                  this.titleService.default = '';
-                  this.titleService.suffix = 'meimos';
-                  this.router.navigateByUrl(url);
-                }
-              },
-              (err) => console.error('error', err),
-            );
-          });
-        },
-        (error) => {
-          console.log(error);
-          this.error = error.error.message || '登录异常，稍后再试';
-        },
-      );
+          this.router.navigateByUrl(url);
+        });
+      });
   }
 
   // #region social

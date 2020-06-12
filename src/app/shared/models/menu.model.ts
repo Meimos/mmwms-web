@@ -1,29 +1,21 @@
 import { SFSchema, SFSelectWidgetSchema, SFStringWidgetSchema } from '@delon/form';
 
 export interface IMenu {
-  id?: any;
-  title?: string;
-  type?: number;
+  menuId?: any;
+  menuName?: string;
+  menuType?: string;
   children?: IMenu[];
   path?: string;
   pid?: number;
-  hidden?: boolean;
+  visible?: boolean;
   icon?: string;
-  menuSort?: number;
+  sortNo?: string;
+  langKey?: string;
+  perms?: string;
 }
 
 export class Menu implements IMenu {
-  constructor(
-    public id?: any,
-    public title?: string,
-    public type?: number,
-    public children?: IMenu[],
-    public path?: string,
-    public pid?: number,
-    public hidden?: boolean,
-    public icon?: string,
-    public menuSort?: number,
-  ) {}
+  constructor(public menuId?: any, public menuType?: string, public pid?: number, public visible?: boolean) {}
 }
 
 export const menuSearchSchema: SFSchema = {
