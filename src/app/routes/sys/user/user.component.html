@@ -6,6 +6,7 @@
     <button nz-button nzType="primary" down-file [http-data]="timestamp" http-url="system/user/export" file-name="用户列表">导出</button>
   </ng-template>
 </page-header>
+
 <nz-card>
   <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
   <st #st [data]="url" [columns]="columns" (change)="change($event)"></st>
