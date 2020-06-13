@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { STChange, STColumn, STComponent, STData } from '@delon/abc/st';
 import { ModalHelper, _HttpClient } from '@delon/theme';
-import {badgeMap, BadgeType, noticeSearchSchema, DictType, User} from '@shared';
+import {badgeMap, BadgeType, DictType, noticeSearchSchema, User} from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { SysNoticeEditComponent } from './edit/edit.component';
 import { SysNoticeViewComponent } from './view/view.component';

@@ -86,6 +86,7 @@ export const HelpLinks = {
  */
 export enum BadgeType {
   USER_BADGE = 'USER_BADGE',
+  SNO_GENTYPE = 'SNO_GENTYPE',
 }
 
 export const badgeMap = new Map<BadgeType, STColumnBadge>([
@@ -94,6 +95,15 @@ export const badgeMap = new Map<BadgeType, STColumnBadge>([
     {
       1: { text: '失效', color: 'error' },
       0: { text: '生效', color: 'processing' },
+    },
+  ],
+  [
+    BadgeType.SNO_GENTYPE,
+    {
+      0: { text: '递增', color: 'success' },
+      1: { text: '每天生成', color: 'error' },
+      2: { text: '每月生成', color: 'processing' },
+      3: { text: '每年生成', color: 'warning' },
     },
   ],
 ]);
@@ -108,6 +118,7 @@ export interface DictTypeData {
 
 export enum DictType {
   SEX = 'SEX',
+  SNO_GENTYPE = 'SNO_GENTYPE',
   USER_STATUS = 'USER_STATUS',
   MENU_TYPE_DIR = 'M',
   MENU_TYPE_MENU = 'C',
@@ -117,11 +128,32 @@ export enum DictType {
   NOTICESTATUS = 'NOTICESTATUS',
   JOB_GROUP = 'JOB_GROUP',
   JOB_STATUS = 'JOB_STATUS',
-  JOB_IS_CONCURRENT_EXE = 'JOB_IS_CONCURRENT_EXE' ,
-  JOB_MISFIRE_IGNORE_MISFIRES = 'JOB_MISFIRE_IGNORE_MISFIRES' ,
+  JOB_IS_CONCURRENT_EXE = 'JOB_IS_CONCURRENT_EXE',
+  JOB_MISFIRE_IGNORE_MISFIRES = 'JOB_MISFIRE_IGNORE_MISFIRES',
 }
 
 export const dictMap = new Map<DictType, DictTypeData[]>([
+  [
+    DictType.SNO_GENTYPE,
+    [
+      {
+        label: '递增',
+        value: '0',
+      },
+      {
+        label: '每天生成',
+        value: '1',
+      },
+      {
+        label: '每月生成',
+        value: '2',
+      },
+      {
+        label: '每年生成',
+        value: '3',
+      },
+    ],
+  ],
   [
     DictType.SEX,
     [
