@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { STChange, STColumn, STComponent, STData } from '@delon/abc/st';
 import { ModalHelper, _HttpClient } from '@delon/theme';
-import {badgeMap, BadgeType, jobSearchSchema, DictType, dictMap} from '@shared';
+import {badgeMap, BadgeType, dictMap, DictType, jobSearchSchema} from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { MonitorJobEditComponent } from './edit/edit.component';
 import { MonitorJobViewComponent } from './view/view.component';

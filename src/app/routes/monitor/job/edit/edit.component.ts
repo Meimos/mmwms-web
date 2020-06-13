@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {SFComponent, SFRadioWidgetSchema, SFSchema, SFUISchema, SFSelectWidgetSchema, SFTextareaWidgetSchema, SFTagWidgetSchema} from '@delon/form';
+import {SFComponent, SFRadioWidgetSchema, SFSchema, SFSelectWidgetSchema, SFTagWidgetSchema, SFTextareaWidgetSchema, SFUISchema} from '@delon/form';
 import { _HttpClient } from '@delon/theme';
+import {dictMap, DictType, IJob, Job } from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
-import {dictMap, DictType, IJob, Job } from '@shared';
 
 @Component({
   selector: 'app-monitor-job-edit',

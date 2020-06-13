@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {SFComponent, SFRadioWidgetSchema, SFSchema, SFUISchema} from '@delon/form';
 import { _HttpClient } from '@delon/theme';
+import {Config, dictMap, DictType, IConfig} from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
-import {dictMap, DictType, IConfig, Config} from '@shared';
 
 @Component({
   selector: 'app-sys-config-edit',

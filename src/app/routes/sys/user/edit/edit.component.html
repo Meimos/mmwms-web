@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <div class="modal-title" *ngIf="record.id > 0; else elseTemplete">修改用户信息</div>
+  <div class="modal-title" *ngIf="record.userId > 0; else elseTemplete">修改用户信息</div>
   <ng-template #elseTemplete>新增用户信息</ng-template>
 </div>
 <nz-spin *ngIf="!formData" class="modal-spin"></nz-spin>
