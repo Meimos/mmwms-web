@@ -163,4 +163,5 @@
   "monitor.manage.job":"定时任务",
   "monitor.manage.druid":"数据监控",
   "monitor.manage.server":"服务监控"
+  
 }
