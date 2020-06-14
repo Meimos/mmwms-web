@@ -5,8 +5,7 @@ import { StartupService } from '@core';
 import { ReuseTabService } from '@delon/abc/reuse-tab';
 import { ACLService } from '@delon/acl';
 import { DA_SERVICE_TOKEN, ITokenService, SocialOpenType, SocialService } from '@delon/auth';
-import { SettingsService, _HttpClient } from '@delon/theme';
-import { ALAIN_I18N_TOKEN, MenuService, TitleService } from '@delon/theme';
+import { MenuService, SettingsService, TitleService, _HttpClient } from '@delon/theme';
 import { environment } from '@env/environment';
 import { UserAccount } from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -25,6 +24,9 @@ export class UserLoginComponent implements OnDestroy {
     private router: Router,
     private settingsService: SettingsService,
     private socialService: SocialService,
+    private menuService: MenuService,
+    private aclService: ACLService,
+    private titleService: TitleService,
     @Optional()
     @Inject(ReuseTabService)
     private reuseTabService: ReuseTabService,
@@ -32,10 +34,6 @@ export class UserLoginComponent implements OnDestroy {
     private startupSrv: StartupService,
     public http: _HttpClient,
     public msg: NzMessageService,
-    private menuService: MenuService,
-    private settingService: SettingsService,
-    private aclService: ACLService,
-    private titleService: TitleService,
   ) {
     this.form = fb.group({
       userName: [null, [Validators.required, Validators.minLength(4)]],
@@ -147,7 +145,7 @@ export class UserLoginComponent implements OnDestroy {
                     email: res.user.email,
                   };
                   // 用户信息：包括姓名、头像、邮箱地址
-                  this.settingService.setUser(user);
+                  this.settingsService.setUser(user);
                   // ACL：设置权限为全量
                   this.aclService.setFull(true);
                   // 初始化菜单

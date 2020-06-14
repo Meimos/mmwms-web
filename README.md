@@ -4,10 +4,10 @@
   </a>
 </p>
 
-<h1 align="center">NG-ALAIN</h1>
+<h1 align="center">MMWMS-WEB</h1>
 
 <div align="center">
-  Out-of-box UI solution for enterprise applications, Let developers focus on business.
+  Used By NG-ALAIN AND ZORRO.
 
   [![Build Status](https://dev.azure.com/ng-alain/ng-alain/_apis/build/status/ng-alain-CI?branchName=master)](https://dev.azure.com/ng-alain/ng-alain/_build/latest?definitionId=2&branchName=master)
   [![Dependency Status](https://david-dm.org/ng-alain/ng-alain/status.svg?style=flat-square)](https://david-dm.org/ng-alain/ng-alain)
